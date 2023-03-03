@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Weight)
+      User.hasMany(models.WeightGoal)
+      User.hasMany(models.ExerciseProgram)
     }
   }
   User.init({
