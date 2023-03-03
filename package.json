@@ -8,6 +8,8 @@
   "dependencies": {
     "@bugsnag/js": "^7.20.0",
     "@bugsnag/plugin-express": "^7.19.0",
+    "@sentry/node": "^7.40.0",
+    "@sentry/tracing": "^7.40.0",
     "auth0": "^3.2.0",
     "cookie-parser": "~1.4.4",
     "debug": "~4.3.0",

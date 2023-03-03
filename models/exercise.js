@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Exercise.hasMany(models.Muscle)
+      Exercise.hasMany(models.Tag)
     }
   }
   Exercise.init({
