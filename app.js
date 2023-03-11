@@ -4,9 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-const { expressjwt: expressJwt } = require('express-jwt');
-const jwks = require('jwks-rsa');
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -50,21 +47,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var jwtCheck = expressJwt({
-  secret: jwks.expressJwtSecret({
-    cache : true,
-    ratelimit : true,
-    jwksRequestsPerMinute : 5,
-    jwksUri : "https://dev-aa5pftowvhf5q3p2.us.auth0.com/.well-known/jwks.json"
-  }),
-  audience : "muscleapp",
-  issuer : "https://dev-aa5pftowvhf5q3p2.us.auth0.com/",
-  algorithms : ['RS256']
-})
-
-app.use(jwtCheck);
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users',  usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
