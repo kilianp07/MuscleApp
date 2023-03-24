@@ -1,8 +1,10 @@
 require('dotenv').config();
 const axios = require('axios');
 var express = require('express');
+const authenticate = require('../plugins/getProfile');
 var router = express.Router();
 jwtCheck = require('../plugins/checkJwt');
+const getProfile = require('../plugins/getProfile');
 
 
 async function getAccessToken() {
@@ -18,28 +20,11 @@ async function getAccessToken() {
   return response.data.access_token;
 }
 
-router.get('/profile', jwtCheck, (req, res) => {
-  const accessToken  = req.headers["authorization"]&& req.headers["authorization"].split(' ')[1]
-  //const accessToken = getAccessToken();
-  axios.get(`https://${process.env.AUTH0BASEURL}/userinfo`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => {
-    const userProfile = response.data;
-
-    // Do something with the user profile
-    console.log(userProfile);
-
-    res.json(userProfile);
-  })
-  .catch(error => {
-    console.error(error);
-    res.status(500).send('Error retrieving user profile');
-  });
+// Create /profile route with the getProfile middleware
+router.get('/', getProfile, async (req, res) => {
+  res.json(req.user);
 });
 
-  
+
+
 module.exports = router;

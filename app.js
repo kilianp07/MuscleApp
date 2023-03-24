@@ -3,12 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var checkJwt = require('./plugins/checkJwt');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var weightRouter = require('./routes/weight')
 
- const Sentry = require('@sentry/node');
- const Tracing = require("@sentry/tracing");
+const Sentry = require('@sentry/node');
+const Tracing = require("@sentry/tracing");
 
 var app = express();
 
@@ -49,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users',  usersRouter);
+app.use('/weight', checkJwt, weightRouter );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

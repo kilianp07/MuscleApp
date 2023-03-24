@@ -1,9 +1,21 @@
-require('dotenv').config();
-const { ManagementClient } = require('auth0');
+var request = require("request");
 
- // Create an Auth0 Management API client
- const auth0 = new ManagementClient({
-    domain: process.env.AUTH0BASEURL,
-    clientId: process.env.AUTH0CLIENTID,
-    clientSecret: process.env.AUTH0CLIENTSECRET,
-  });
+var options = { 
+  method: 'POST',
+  url: `https://${process.env.AUTH0BASEURL}/oauth/token`,
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({
+    client_id: process.env.AUTH0_CLIENT_ID,
+    client_secret: process.env.AUTH0_CLIENT_SECRET,
+    audience: process.env.AUTH0_AUDIENCE,
+    grant_type: 'client_credentials'
+  })
+};
+
+
+// Export the request function result
+module.exports = request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+
+  return body.access_token;
+});

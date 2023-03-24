@@ -12,6 +12,7 @@ var jwtCheck = expressJwt({
     audience : process.env.AUTH0AUDIENCE,
     issuer : `https://${process.env.AUTH0BASEURL}/`,
     algorithms : ['RS256']
-  })
+  }
+)
 
 module.exports = jwtCheck;

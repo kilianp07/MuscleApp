@@ -12,15 +12,25 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       // Weight has one User
-      Weight.hasOne(models.User)
+      Weight.belongsTo(models.User)
     }
   }
   Weight.init({
     value: DataTypes.FLOAT,
-    timestamp: DataTypes.DATE
+    timestamp: DataTypes.DATE,
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
   }, {
     sequelize,
     modelName: 'Weight',
   });
+
+  function incomingCorrectlyFilled(weight) {
+    return weight.value && weight.timestamp && weight.userId;
+  }
+
   return Weight;
 };
