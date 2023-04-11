@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Tag.init({
     title: DataTypes.STRING,
-    descritpion: DataTypes.TEXT('long')
+    descritpion: DataTypes.TEXT('long'),
+    isDeleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Tag',

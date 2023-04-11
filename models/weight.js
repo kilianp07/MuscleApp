@@ -18,11 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   Weight.init({
     value: DataTypes.FLOAT,
     timestamp: DataTypes.DATE,
-    isDeleted: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    }
+    isDeleted: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'Weight',

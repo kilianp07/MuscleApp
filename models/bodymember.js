@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   BodyMember.init({
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    isDeleted:  DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'BodyMember',

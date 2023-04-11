@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   WeightGoal.init({
     value: DataTypes.FLOAT,
-    timestamp: DataTypes.DATE
+    timestamp: DataTypes.DATE,
+    isDeleted: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'WeightGoal',

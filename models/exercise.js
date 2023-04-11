@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   Exercise.init({
     title: DataTypes.STRING,
     descritpion: DataTypes.TEXT('long'),
+    isDeleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Exercise',
