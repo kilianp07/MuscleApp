@@ -1,0 +1,4 @@
+package muscleapp
+
+func Start() {
+}
