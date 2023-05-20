@@ -1,15 +1,8 @@
-# MuscleApp
-## Installation
-Create a .env file in the root directory and add the following:
-```
-DB_USER="your_db_user"
-DB_PASSWORD="your_db_pass"
+# MuscleApp BackEnd
 
-PORT="3000" 
-```
+## Readme coming soon
 
-Run the following commands:
-```
-npm install
-npm start
+## Generate JWT Keys
+```bash
+echo 'SECRET_KEY="'$(openssl rand -base64 32)'"' >> .env
 ```
