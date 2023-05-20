@@ -7,14 +7,16 @@ import (
 	"github.com/kilianp07/MuscleApp/database"
 	authHandler "github.com/kilianp07/MuscleApp/handlers/auth"
 	userHandler "github.com/kilianp07/MuscleApp/handlers/user"
+	weightHandler "github.com/kilianp07/MuscleApp/handlers/weight"
 	tokenutil "github.com/kilianp07/MuscleApp/utils/tokens"
 	"gorm.io/gorm"
 )
 
 type Api struct {
-	userH *userHandler.UserHandler
-	authH *authHandler.AuthHandler
-	db    *gorm.DB
+	userH   *userHandler.UserHandler
+	authH   *authHandler.AuthHandler
+	weightH *weightHandler.WeightHandler
+	db      *gorm.DB
 }
 
 func NewApi() *Api {
@@ -24,9 +26,10 @@ func NewApi() *Api {
 	}
 
 	return &Api{
-		userH: userHandler.NewUserHandler(db),
-		authH: authHandler.NewAuthHandler(db),
-		db:    db,
+		userH:   userHandler.NewUserHandler(db),
+		authH:   authHandler.NewAuthHandler(db),
+		weightH: weightHandler.NewWeightHandler(db),
+		db:      db,
 	}
 }
 
@@ -50,6 +53,12 @@ func (api *Api) createGroups(r *gin.Engine) {
 	{
 		auth.POST("/login", api.authH.Login)
 		auth.POST("/refresh", tokenutil.JwtAuthMiddleware(), api.authH.RefreshToken)
+	}
+
+	weight := r.Group("/weight", tokenutil.JwtAuthMiddleware())
+	{
+		weight.GET("/latest", api.weightH.GetLatestWeight)
+		weight.POST("/", api.weightH.CreateWeight)
 	}
 }
 
