@@ -36,3 +36,5 @@ vendor
 .env
 
 *.pem
+
+build
