@@ -1,39 +1,24 @@
 package main
 
 import (
-	"flag"
-	_ "net/http/pprof"
+	"log"
 
-	"github.com/kilianp07/MuscleApp/gin"
-	"github.com/kilianp07/MuscleApp/gorm"
-
-	"github.com/golang/glog"
+	"github.com/joho/godotenv"
+	"github.com/kilianp07/MuscleApp/api"
+	"github.com/kilianp07/MuscleApp/utils/env"
 )
 
 func main() {
-	//Snag all flags that our application is run on.
-	flag.Parse()
-	flag.Lookup("alsologtostderr").Value.Set("true")
 
-	//Initalize our db.
-	glog.Info("Initalizing db...")
-	db, err := gorm.InitDB()
+	err := godotenv.Load()
 	if err != nil {
-		glog.Fatal("Could not initalize db", err.Error())
+		log.Fatal("Error loading .env file")
 	}
 
-	//Defer this so that if our application exits, we close the db.
-	//Double check this.
-
-	defer db.Close()
-
-	glog.Info("Initalizing Models...")
-
-	err = gorm.Migrate()
-	if err != nil {
-		glog.Fatal("Could not run object migrations.")
+	if !env.ValidateEnv() {
+		return
 	}
 
-	gin.Run()
-
+	api := api.NewApi()
+	api.StartApi()
 }

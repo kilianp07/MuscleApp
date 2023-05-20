@@ -9,9 +9,6 @@
 
 # Editor additions
 .vscode
-
-config/localConfig.yaml
-config/localConfig.yml
 *tmp/
 **tmp/*
 tmp/*
@@ -33,3 +30,9 @@ _testmain.go
 *.prof
 
 vendor
+
+.vscode
+
+.env
+
+*.pem
