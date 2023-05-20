@@ -1,74 +1,39 @@
-.PHONY: build fmt lint dev test vet godep install bench run fresh
+# Go parameters
+GO := go
+GOFLAGS := 
+GOTEST := $(GO) test
+BINARY_NAME := MuscleApp
+BUILD_DIR := ./build
+SRC_FILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 
-SHELL := /bin/sh
-PKG_NAME=$(shell basename `pwd`)
-GIT_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
-GINKGO := $(shell command -v ginkgo 2> /dev/null)
+# Default target
+.PHONY: all
+all: build
 
-vendor-dependencies:
-	govendor add +e
+# Build target
+.PHONY: build
+build: $(BUILD_DIR)/$(BINARY_NAME)
 
-build: vet \
-		test
-		go build
+$(BUILD_DIR)/$(BINARY_NAME): $(SRC_FILES)
+	@mkdir -p $(BUILD_DIR)
+	$(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)
 
-doc:
-	godoc -http=:6060
+# Run target
+.PHONY: run
+run:
+	$(GO) run $(GOFLAGS) main.go
 
-fmt:
-	go fmt
 
-lint:
-	golint ./... | grep -v vendor
+# Clean target
+.PHONY: clean
+clean:
+	@rm -rf $(BUILD_DIR)
 
-dev:
-	DEBUG=* go get && govendor add +e && go run main.go
-
-fresh:
-	go get github.com/pilu/fresh && export ENVIRONMENT=local && fresh
-
-# Runs Tests with single stream logs for ginkgo tests
-test:
-# Install ginkgo if not installed
-ifeq ($(GINKGO),)
-	go get -u github.com/onsi/ginkgo/ginkgo
-endif
-	# Run all Gin tests with ginkgo
-	export ENVIRONMENT=testing && ginkgo -r -v -noisyPendings=false --nodes=1 -notify --progress --trace ./gin | grep -v vendor
-
-# Runs all tests
-test-all:
-	export ENVIRONMENT=testing && go test -v ./... -cover | grep -v vendor
-
-test-only:
-	export ENVIRONMENT=testing && ginkgo -r -v -noisyPendings=false --nodes=1 -notify --progress --trace ./gin --focus="ONLY"
-
-bench:
-	go test ./... -bench=. | grep -v vendor
-
-vet:
-	go vet
-
-commit:
-	read -r -p "Commit message: " message; \
-	git add .; \
-	git commit -m "$$message" \
-
-# note pushes to origin
-push: build
-	git push origin $(GIT_BRANCH)
-
-cover:
-	read -r -p "package to get coverage from: " package; \
-	export ENVIRONMENT=testing && go test -v ./"$$package" --cover --coverprofile=coverage.out | grep -v vendor \
-
-	go tool cover -html=coverage.out
-
-# watches and runs ginkgo tests and notifies on failures
-watch:
-
-	export ENVIRONMENT=testing && ginkgo watch -r -v -noisyPendings=false --nodes=1 -notify --progress --trace ./gin | grep -v vendor
-
-prune:
-
-	git branch --merged | egrep -v "(^\*|staging)" | xargs git branch -d && git remote prune origin
+# Help target
+.PHONY: help
+help:
+	@echo "Available targets:"
+	@echo "  build    - Build the binary"
+	@echo "  run      - Run the application"
+	@echo "  clean    - Clean build artifacts"
+	@echo "  help     - Show this help message"
