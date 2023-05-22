@@ -3,6 +3,7 @@ package api
 import (
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/kilianp07/MuscleApp/database"
 	authHandler "github.com/kilianp07/MuscleApp/handlers/auth"
@@ -33,6 +34,7 @@ func NewApi() *Api {
 func (api *Api) StartApi() {
 	r := gin.Default()
 	api.createGroups(r)
+	r.Use(cors.Default())
 	r.Run(":" + os.Getenv("API_PORT"))
 }
 
