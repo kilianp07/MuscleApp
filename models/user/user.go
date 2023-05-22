@@ -23,5 +23,6 @@ func ModelToPublic(user *Model) *Public {
 		Name:     user.Name,
 		Surname:  user.Surname,
 		Username: user.Username,
+		Email:    user.Email,
 	}
 }
