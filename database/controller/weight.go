@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"time"
-
 	weightModel "github.com/kilianp07/MuscleApp/models/weight"
+	timeUtils "github.com/kilianp07/MuscleApp/utils/time"
 )
 
 func (c *Controller) GetLatestWeight(userId uint) (*weightModel.Model, error) {
@@ -14,17 +13,18 @@ func (c *Controller) GetLatestWeight(userId uint) (*weightModel.Model, error) {
 	return &weight, nil
 }
 
-func (c *Controller) GetWeights(userId uint) ([]*weightModel.Model, error) {
-	var weights []*weightModel.Model
-	if err := c.db.Where("user_id = ?", userId).Find(&weights).Error; err != nil {
-		return weights, err
-	}
-	return weights, nil
-}
+func (c *Controller) GetWeights(userId uint) ([]*weightModel.Public, error) {
+	var (
+		data    []*weightModel.Model
+		weights []*weightModel.Public
+	)
+	err := c.db.Where("user_id = ?", userId).Find(&data).Error
 
-func (c *Controller) GetWeightsBetweenDates(userId uint, startDate *time.Time, endDate *time.Time) ([]*weightModel.Model, error) {
-	var weights []*weightModel.Model
-	if err := c.db.Where("user_id = ? AND date BETWEEN ? AND ?", userId, startDate, endDate).Find(&weights).Error; err != nil {
+	for _, weight := range data {
+		weights = append(weights, weightModel.ModelToPublic(weight))
+	}
+
+	if err != nil {
 		return weights, err
 	}
 	return weights, nil
@@ -42,4 +42,28 @@ func (c *Controller) DeleteWeight(id uint) error {
 		return err
 	}
 	return nil
+}
+
+func (c *Controller) UpdateWeight(weight *weightModel.Model) error {
+	if err := c.db.Save(&weight).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Controller) GetWeightsBetween(userId uint, start int, end int) ([]*weightModel.Public, error) {
+	var (
+		data    []*weightModel.Model
+		weights []*weightModel.Public
+	)
+	err := c.db.Where("user_id = ? AND date BETWEEN ? AND ?", userId, timeUtils.TimestampToTime(int64(start)), timeUtils.TimestampToTime(int64(end))).Find(&data).Error
+
+	for _, weight := range data {
+		weights = append(weights, weightModel.ModelToPublic(weight))
+	}
+
+	if err != nil {
+		return weights, err
+	}
+	return weights, nil
 }

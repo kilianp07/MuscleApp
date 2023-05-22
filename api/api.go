@@ -58,6 +58,7 @@ func (api *Api) createGroups(r *gin.Engine) {
 	weight := r.Group("/weight", tokenutil.JwtAuthMiddleware())
 	{
 		weight.GET("/latest", api.weightH.GetLatestWeight)
+		weight.GET("/", api.weightH.GetWeights)
 		weight.POST("/", api.weightH.CreateWeight)
 	}
 }
