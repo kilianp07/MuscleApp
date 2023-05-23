@@ -6,19 +6,20 @@ import (
 	"strconv"
 	"time"
 
-	jwt "github.com/golang-jwt/jwt/v4"
+	jwt "github.com/golang-jwt/jwt/v5"
 	tokenModel "github.com/kilianp07/MuscleApp/models/token"
 	userModel "github.com/kilianp07/MuscleApp/models/user"
 )
 
 func CreateAccessToken(user *userModel.Model, expiry int) (accessToken string, err error) {
-	exp := time.Now().Add(time.Hour * time.Duration(expiry)).Unix()
+	exp := time.Now().Add(time.Hour * time.Duration(expiry))
+
 	claims := &tokenModel.JwtCustomClaims{
 		Name:     user.Name,
 		Username: user.Username,
 		ID:       strconv.FormatUint(uint64(user.ID), 10),
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: exp,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(exp),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -30,10 +31,12 @@ func CreateAccessToken(user *userModel.Model, expiry int) (accessToken string, e
 }
 
 func CreateRefreshToken(user *userModel.Model, expiry int) (refreshToken string, err error) {
+	exp := time.Now().Add(time.Hour * time.Duration(expiry))
+
 	claimsRefresh := &tokenModel.JwtCustomRefreshClaims{
 		ID: strconv.FormatUint(uint64(user.ID), 10),
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * time.Duration(expiry)).Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(exp),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
