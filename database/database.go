@@ -5,12 +5,14 @@ import (
 	"os"
 
 	userModel "github.com/kilianp07/MuscleApp/models/user"
+	weightModel "github.com/kilianp07/MuscleApp/models/weight"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var models = []any{
 	&userModel.Model{},
+	&weightModel.Model{},
 }
 
 func ConnectDatabase() (db *gorm.DB, err error) {

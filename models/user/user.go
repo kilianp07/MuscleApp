@@ -1,12 +1,19 @@
 package userModel
 
+import (
+	weightModel "github.com/kilianp07/MuscleApp/models/weight"
+	"gorm.io/gorm"
+)
+
 type Model struct {
-	ID       uint   `json:"id" gorm:"primary_key"`
-	Name     string `json:"name"  binding:"required"`
-	Email    string `json:"email" gorm:"unique"  binding:"required"`
-	Surname  string `json:"surname"  binding:"required"`
-	Username string `json:"username" gorm:"unique"  binding:"required"`
-	Password string `json:"password" binding:"required"`
+	gorm.Model
+	ID       uint                `json:"id" gorm:"primary_key"`
+	Name     string              `json:"name"  binding:"required"`
+	Email    string              `json:"email" gorm:"unique"  binding:"required"`
+	Surname  string              `json:"surname"  binding:"required"`
+	Username string              `json:"username" gorm:"unique"  binding:"required"`
+	Password string              `json:"password" binding:"required"`
+	Weights  []weightModel.Model `json:"weights" gorm:"foreignKey:UserID"`
 }
 
 type Public struct {

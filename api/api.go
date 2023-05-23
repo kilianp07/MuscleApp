@@ -7,14 +7,16 @@ import (
 	"github.com/kilianp07/MuscleApp/database"
 	authHandler "github.com/kilianp07/MuscleApp/handlers/auth"
 	userHandler "github.com/kilianp07/MuscleApp/handlers/user"
+	weightHandler "github.com/kilianp07/MuscleApp/handlers/weight"
 	tokenutil "github.com/kilianp07/MuscleApp/utils/tokens"
 	"gorm.io/gorm"
 )
 
 type Api struct {
-	userH *userHandler.UserHandler
-	authH *authHandler.AuthHandler
-	db    *gorm.DB
+	userH   *userHandler.UserHandler
+	authH   *authHandler.AuthHandler
+	weightH *weightHandler.WeightHandler
+	db      *gorm.DB
 }
 
 func NewApi() *Api {
@@ -24,9 +26,10 @@ func NewApi() *Api {
 	}
 
 	return &Api{
-		userH: userHandler.NewUserHandler(db),
-		authH: authHandler.NewAuthHandler(db),
-		db:    db,
+		userH:   userHandler.NewUserHandler(db),
+		authH:   authHandler.NewAuthHandler(db),
+		weightH: weightHandler.NewWeightHandler(db),
+		db:      db,
 	}
 }
 
@@ -34,7 +37,10 @@ func (api *Api) StartApi() {
 	r := gin.Default()
 	r.Use(CORS())
 	api.createGroups(r)
-	r.Run(":" + os.Getenv("API_PORT"))
+	err := r.Run(":" + os.Getenv("API_PORT"))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (api *Api) createGroups(r *gin.Engine) {
@@ -50,6 +56,16 @@ func (api *Api) createGroups(r *gin.Engine) {
 	{
 		auth.POST("/login", api.authH.Login)
 		auth.POST("/refresh", tokenutil.JwtAuthMiddleware(), api.authH.RefreshToken)
+	}
+
+	weight := r.Group("/weight", tokenutil.JwtAuthMiddleware())
+	{
+		weight.POST("/", api.weightH.CreateWeight)
+		weight.GET("/latest", api.weightH.GetLatestWeight)
+		weight.GET("/", api.weightH.GetWeights)
+		weight.GET("/:start/:end", api.weightH.GetWeightsBetween)
+		weight.DELETE("/:date", api.weightH.DeleteWeight)
+
 	}
 }
 

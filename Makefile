@@ -1,6 +1,6 @@
 # Go parameters
 GO := go
-GOFLAGS := 
+GOFLAGS :=
 GOTEST := $(GO) test
 BINARY_NAME := MuscleApp
 BUILD_DIR := ./build
@@ -29,6 +29,13 @@ run:
 clean:
 	@rm -rf $(BUILD_DIR)
 
+# Target to generate GoDoc documentation for all packages
+.PHONY: docs
+docs:
+	@rm -rf docs
+	@mkdir -p docs
+	@go list ./... | xargs -n1 go doc -all -html > docs/index.html
+	
 # Help target
 .PHONY: help
 help:
