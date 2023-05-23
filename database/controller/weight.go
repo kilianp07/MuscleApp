@@ -44,8 +44,22 @@ func (c *Controller) DeleteWeight(id uint) error {
 	return nil
 }
 
+func (c *Controller) DeleteWeightByDate(userId uint, date int) error {
+	if err := c.db.Where("user_id = ? AND date = ?", userId, timeUtils.TimestampToTime(int64(date))).Delete(&weightModel.Model{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Controller) UpdateWeight(weight *weightModel.Model) error {
 	if err := c.db.Save(&weight).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Controller) UpdateWeightByDate(userId uint, weight *weightModel.Public) error {
+	if err := c.db.Model(&weightModel.Model{}).Where("user_id = ? AND date = ?", userId, timeUtils.TimestampToTime(weight.Date)).Updates(weightModel.PublicToModel(weight, weight.Date, userId)).Error; err != nil {
 		return err
 	}
 	return nil

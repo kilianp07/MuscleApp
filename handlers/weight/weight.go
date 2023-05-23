@@ -25,7 +25,7 @@ func NewWeightHandler(db *gorm.DB) *WeightHandler {
 
 func (handler *WeightHandler) CreateWeight(c *gin.Context) {
 	var (
-		data   weightModel.Create
+		data   weightModel.Public
 		weight weightModel.Model
 		err    error
 	)
@@ -60,6 +60,74 @@ func (handler *WeightHandler) CreateWeight(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, weight)
+}
+
+func (handler *WeightHandler) DeleteWeight(c *gin.Context) {
+	var (
+		err error
+	)
+
+	// Get the user from the refresh token
+	userId, exists := c.Get("x-user-id")
+	if !exists {
+		c.JSON(500, gin.H{"error": "User id missing"})
+		return
+	}
+	userIdstring := userId.(string)
+	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "User id missing"})
+		return
+	}
+
+	weightDate := c.Param("date")
+	weightDateInt, err := strconv.ParseInt(weightDate, 10, 64)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Cannot read weight date"})
+		return
+	}
+
+	// Delete the weight from the database
+	if err = handler.controller.DeleteWeightByDate(uint(userIdUint), int(weightDateInt)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Weight deleted"})
+
+}
+
+func (handler *WeightHandler) UpdateWeight(c *gin.Context) {
+	var (
+		weight weightModel.Public
+		err    error
+	)
+
+	// Get the user from the refresh token
+	userId, exists := c.Get("x-user-id")
+	if !exists {
+		c.JSON(500, gin.H{"error": "User id missing"})
+		return
+	}
+	// Paste it into the weight object
+	userIdstring := userId.(string)
+	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Cannot read user id"})
+		return
+	}
+
+	if err = c.ShouldBindJSON(&weight); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Update the weight in the database
+	if err = handler.controller.UpdateWeightByDate(uint(userIdUint), &weight); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, weight)
 }
 
 func (handler *WeightHandler) GetLatestWeight(c *gin.Context) {

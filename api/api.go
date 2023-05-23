@@ -37,7 +37,10 @@ func (api *Api) StartApi() {
 	r := gin.Default()
 	r.Use(CORS())
 	api.createGroups(r)
-	r.Run(":" + os.Getenv("API_PORT"))
+	err := r.Run(":" + os.Getenv("API_PORT"))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (api *Api) createGroups(r *gin.Engine) {
@@ -57,9 +60,12 @@ func (api *Api) createGroups(r *gin.Engine) {
 
 	weight := r.Group("/weight", tokenutil.JwtAuthMiddleware())
 	{
+		weight.POST("/", api.weightH.CreateWeight)
 		weight.GET("/latest", api.weightH.GetLatestWeight)
 		weight.GET("/", api.weightH.GetWeights)
-		weight.POST("/", api.weightH.CreateWeight)
+		weight.GET("/:start/:end", api.weightH.GetWeightsBetween)
+		weight.DELETE("/:date", api.weightH.DeleteWeight)
+
 	}
 }
 

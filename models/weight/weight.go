@@ -15,11 +15,6 @@ type Model struct {
 	Value  float64    `json:"value" binding:"required"`
 }
 
-type Create struct {
-	Date  int64   `json:"date" binding:"required"`
-	Value float64 `json:"value" binding:"required"`
-}
-
 type Public struct {
 	Date  int64   `json:"date" binding:"required"`
 	Value float64 `json:"value" binding:"required"`
