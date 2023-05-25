@@ -11,22 +11,26 @@ import (
 )
 
 var models = []any{
-	&userModel.Model{},
-	&weightModel.Model{},
+	&userModel.User{},
+	&weightModel.Weight{},
 }
 
-func ConnectDatabase() (db *gorm.DB, err error) {
+func ConnectDatabase() (*gorm.DB, error) {
 
-	mysqlDB := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASSWORD") + "@tcp(" + os.Getenv("DB_host") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=True&loc=Local"
+	mysqlDB := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"),
+	)
+
 	database, err := gorm.Open(mysql.Open(mysqlDB), &gorm.Config{})
-
 	if err != nil {
-		fmt.Println("Error connecting to database: ", err)
-		panic("Failed to connect to database!")
+		return nil, err
 	}
 
-	err = database.AutoMigrate(models...)
-	if err != nil {
+	if err := database.AutoMigrate(models...); err != nil {
 		return nil, err
 	}
 

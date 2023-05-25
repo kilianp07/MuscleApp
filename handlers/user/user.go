@@ -23,7 +23,7 @@ func NewUserHandler(db *gorm.DB) *UserHandler {
 
 func (handler *UserHandler) CreateUser(c *gin.Context) {
 	var (
-		user userModel.Model
+		user userModel.User
 		err  error
 	)
 
@@ -44,7 +44,7 @@ func (handler *UserHandler) CreateUser(c *gin.Context) {
 
 func (handler *UserHandler) GetUserByID(c *gin.Context) {
 	var (
-		userResult *userModel.Model
+		userResult *userModel.User
 		err        error
 	)
 	id := c.Param("id")
@@ -61,7 +61,7 @@ func (handler *UserHandler) GetUserByID(c *gin.Context) {
 func (handler *UserHandler) UpdateUser(c *gin.Context) {
 	id := c.Param("id")
 	var (
-		user *userModel.Model
+		user *userModel.User
 		err  error
 	)
 
@@ -88,7 +88,7 @@ func (handler *UserHandler) UpdateUser(c *gin.Context) {
 
 func (handler *UserHandler) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	var user userModel.Model
+	var user userModel.User
 
 	// Retrieve the user with the given ID from the database
 	if err := handler.db.First(&user, id).Error; err != nil {

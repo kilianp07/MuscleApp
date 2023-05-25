@@ -8,9 +8,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func (c *Controller) GetUserByID(id string) (*userModel.Model, error) {
+func (c *Controller) GetUserByID(id string) (*userModel.User, error) {
 
-	var user *userModel.Model
+	var user *userModel.User
 	if err := c.db.First(&user, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, fmt.Errorf("user not found")
@@ -21,8 +21,8 @@ func (c *Controller) GetUserByID(id string) (*userModel.Model, error) {
 	return user, nil
 }
 
-func (c *Controller) GetUserByEmail(email string) (*userModel.Model, error) {
-	var user userModel.Model
+func (c *Controller) GetUserByEmail(email string) (*userModel.User, error) {
+	var user userModel.User
 
 	if err := c.db.Where("email = ?", email).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -34,7 +34,7 @@ func (c *Controller) GetUserByEmail(email string) (*userModel.Model, error) {
 	return &user, nil
 }
 
-func (c *Controller) CreateUser(user *userModel.Model) error {
+func (c *Controller) CreateUser(user *userModel.User) error {
 	var err error
 
 	user.Password, err = auth.HashPassword(user.Password)

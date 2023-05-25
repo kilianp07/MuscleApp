@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Model struct {
+type Weight struct {
 	gorm.Model
 	ID     uint       `json:"id" gorm:"primary_key"`
 	UserID uint       `json:"user_id"`
@@ -20,16 +20,16 @@ type Public struct {
 	Value float64 `json:"value" binding:"required"`
 }
 
-func ModelToPublic(weight *Model) *Public {
+func ModelToPublic(weight *Weight) *Public {
 	return &Public{
 		Date:  timeUtils.TimeToTimestamp(weight.Date),
 		Value: weight.Value,
 	}
 }
 
-func PublicToModel(weight *Public, timestamp int64, userId uint) *Model {
+func PublicToModel(weight *Public, timestamp int64, userId uint) *Weight {
 
-	return &Model{
+	return &Weight{
 		Date:   timeUtils.TimestampToTime(int64(timestamp)),
 		Value:  weight.Value,
 		UserID: userId,
