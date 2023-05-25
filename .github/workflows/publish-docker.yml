@@ -22,5 +22,4 @@ jobs:
     - name: Build the hello-world Docker image
       run: |
         docker build . --tag ghcr.io/kilianp07/muscleapp:latest
-        docker run ghcr.io/kilianp07/muscleapp:latest
         docker push ghcr.io/kilianp07/muscleapp:latest

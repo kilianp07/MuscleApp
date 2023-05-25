@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/joho/godotenv"
 	"github.com/kilianp07/MuscleApp/api"
@@ -12,7 +12,7 @@ func main() {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		fmt.Println("Error loading .env file, trying to load from system environment variables")
 	}
 
 	if !env.ValidateEnv() {
