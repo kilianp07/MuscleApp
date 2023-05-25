@@ -23,7 +23,7 @@ services:
     volumes:
       - my-db:/var/lib/mysql
 
-  Api:
+  api:
     build: .
     depends_on:
       db:
