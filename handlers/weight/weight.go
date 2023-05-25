@@ -26,7 +26,7 @@ func NewWeightHandler(db *gorm.DB) *WeightHandler {
 func (handler *WeightHandler) CreateWeight(c *gin.Context) {
 	var (
 		data   weightModel.Public
-		weight weightModel.Model
+		weight weightModel.Weight
 		err    error
 	)
 
@@ -132,7 +132,7 @@ func (handler *WeightHandler) UpdateWeight(c *gin.Context) {
 
 func (handler *WeightHandler) GetLatestWeight(c *gin.Context) {
 	var (
-		weightResult *weightModel.Model
+		weightResult *weightModel.Weight
 		err          error
 	)
 

@@ -11,7 +11,7 @@ import (
 	userModel "github.com/kilianp07/MuscleApp/models/user"
 )
 
-func CreateAccessToken(user *userModel.Model, expiry int) (accessToken string, err error) {
+func CreateAccessToken(user *userModel.User, expiry int) (accessToken string, err error) {
 	exp := time.Now().Add(time.Hour * time.Duration(expiry))
 
 	claims := &tokenModel.JwtCustomClaims{
@@ -30,7 +30,7 @@ func CreateAccessToken(user *userModel.Model, expiry int) (accessToken string, e
 	return t, err
 }
 
-func CreateRefreshToken(user *userModel.Model, expiry int) (refreshToken string, err error) {
+func CreateRefreshToken(user *userModel.User, expiry int) (refreshToken string, err error) {
 	exp := time.Now().Add(time.Hour * time.Duration(expiry))
 
 	claimsRefresh := &tokenModel.JwtCustomRefreshClaims{

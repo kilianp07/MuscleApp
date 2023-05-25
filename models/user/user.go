@@ -5,15 +5,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type Model struct {
+type User struct {
 	gorm.Model
-	ID       uint                `json:"id" gorm:"primary_key"`
-	Name     string              `json:"name"  binding:"required"`
-	Email    string              `json:"email" gorm:"unique"  binding:"required"`
-	Surname  string              `json:"surname"  binding:"required"`
-	Username string              `json:"username" gorm:"unique"  binding:"required"`
-	Password string              `json:"password" binding:"required"`
-	Weights  []weightModel.Model `json:"weights" gorm:"foreignKey:UserID"`
+	ID       uint                 `json:"id" gorm:"primary_key"`
+	Name     string               `json:"name"  binding:"required"`
+	Email    string               `json:"email" gorm:"unique"  binding:"required"`
+	Surname  string               `json:"surname"  binding:"required"`
+	Username string               `json:"username" gorm:"unique"  binding:"required"`
+	Password string               `json:"password" binding:"required"`
+	Weights  []weightModel.Weight `json:"weights" gorm:"foreignKey:UserID"`
 }
 
 type Public struct {
@@ -24,7 +24,7 @@ type Public struct {
 	Email    string `json:"email"`
 }
 
-func ModelToPublic(user *Model) *Public {
+func ModelToPublic(user *User) *Public {
 	return &Public{
 		ID:       user.ID,
 		Name:     user.Name,
