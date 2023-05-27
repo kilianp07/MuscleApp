@@ -8,7 +8,7 @@ import (
 func (c *Controller) GetLatestWeight(userId uint) (*weightModel.Weight, error) {
 	var weight weightModel.Weight
 	if err := c.db.Where("user_id = ?", userId).Last(&weight).Error; err != nil {
-		return &weight, err
+		return nil, err
 	}
 	return &weight, nil
 }
@@ -31,38 +31,23 @@ func (c *Controller) GetWeights(userId uint) ([]*weightModel.Public, error) {
 }
 
 func (c *Controller) CreateWeight(weight *weightModel.Weight) error {
-	if err := c.db.Create(&weight).Error; err != nil {
-		return err
-	}
-	return nil
+	return c.db.Create(&weight).Error
 }
 
 func (c *Controller) DeleteWeight(id uint) error {
-	if err := c.db.Delete(&weightModel.Weight{}, id).Error; err != nil {
-		return err
-	}
-	return nil
+	return c.db.Delete(&weightModel.Weight{}, id).Error
 }
 
 func (c *Controller) DeleteWeightByDate(userId uint, date int) error {
-	if err := c.db.Where("user_id = ? AND date = ?", userId, timeUtils.TimestampToTime(int64(date))).Delete(&weightModel.Weight{}).Error; err != nil {
-		return err
-	}
-	return nil
+	return c.db.Where("user_id = ? AND date = ?", userId, timeUtils.TimestampToTime(int64(date))).Delete(&weightModel.Weight{}).Error
 }
 
 func (c *Controller) UpdateWeight(weight *weightModel.Weight) error {
-	if err := c.db.Save(&weight).Error; err != nil {
-		return err
-	}
-	return nil
+	return c.db.Save(&weight).Error
 }
 
 func (c *Controller) UpdateWeightByDate(userId uint, weight *weightModel.Public) error {
-	if err := c.db.Model(&weightModel.Weight{}).Where("user_id = ? AND date = ?", userId, timeUtils.TimestampToTime(weight.Date)).Updates(weightModel.PublicToModel(weight, weight.Date, userId)).Error; err != nil {
-		return err
-	}
-	return nil
+	return c.db.Model(&weightModel.Weight{}).Where("user_id = ? AND date = ?", userId, timeUtils.TimestampToTime(weight.Date)).Updates(weightModel.PublicToModel(weight, weight.Date, userId)).Error
 }
 
 func (c *Controller) GetWeightsBetween(userId uint, start int, end int) ([]*weightModel.Public, error) {
