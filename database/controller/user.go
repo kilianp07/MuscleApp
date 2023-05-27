@@ -42,8 +42,5 @@ func (c *Controller) CreateUser(user *userModel.User) error {
 		return err
 	}
 
-	if err := c.db.Create(&user).Error; err != nil {
-		return err
-	}
-	return nil
+	return c.db.Create(&user).Error
 }
