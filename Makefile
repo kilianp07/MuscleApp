@@ -35,6 +35,12 @@ docs:
 	@rm -rf docs
 	@mkdir -p docs
 	@go list ./... | xargs -n1 go doc -all -html > docs/index.html
+
+# Launch Docker
+.PHONY: docker
+docker:
+	@docker-compose pull
+	@docker-compose up
 	
 # Help target
 .PHONY: help
