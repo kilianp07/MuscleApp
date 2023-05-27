@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kilianp07/MuscleApp/database/controller"
 	"github.com/kilianp07/MuscleApp/utils/auth"
+	gincontext "github.com/kilianp07/MuscleApp/utils/gin_context"
 	tokenutil "github.com/kilianp07/MuscleApp/utils/tokens"
 	"gorm.io/gorm"
 )
@@ -62,6 +63,10 @@ func (handler *AuthHandler) Login(c *gin.Context) {
 }
 
 func (handler *AuthHandler) RefreshToken(c *gin.Context) {
+	var (
+		userId uint
+		err    error
+	)
 
 	refreshToken := c.Request.Header.Get("Authorization")
 	if refreshToken == "" {
@@ -69,15 +74,13 @@ func (handler *AuthHandler) RefreshToken(c *gin.Context) {
 		return
 	}
 
-	// Get the user from the refresh token
-	userId, exists := c.Get("x-user-id")
-	if !exists {
-		c.JSON(500, gin.H{"error": "User id missing"})
+	if userId, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Get user from database
-	user, err := handler.controller.GetUserByID(userId.(string))
+	user, err := handler.controller.GetUserByID(userId)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return

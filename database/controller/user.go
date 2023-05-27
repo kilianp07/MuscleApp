@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (c *Controller) GetUserByID(id string) (*userModel.User, error) {
+func (c *Controller) GetUserByID(id uint) (*userModel.User, error) {
 
 	var user *userModel.User
 	if err := c.db.First(&user, id).Error; err != nil {
