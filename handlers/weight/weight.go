@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kilianp07/MuscleApp/database/controller"
 	weightModel "github.com/kilianp07/MuscleApp/models/weight"
+	gincontext "github.com/kilianp07/MuscleApp/utils/gin_context"
 	timeUtils "github.com/kilianp07/MuscleApp/utils/time"
 	"gorm.io/gorm"
 )
@@ -30,17 +31,8 @@ func (handler *WeightHandler) CreateWeight(c *gin.Context) {
 		err    error
 	)
 
-	// Get the user from the refresh token
-	userId, exists := c.Get("x-user-id")
-	if !exists {
-		c.JSON(500, gin.H{"error": "User id missing"})
-		return
-	}
-	// Paste it into the weight object
-	userIdstring := userId.(string)
-	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "Cannot read user id"})
+	if weight.UserID, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -50,7 +42,6 @@ func (handler *WeightHandler) CreateWeight(c *gin.Context) {
 	}
 
 	// Paste the data into the weight object
-	weight.UserID = uint(userIdUint)
 	weight.Date = timeUtils.TimestampToTime(data.Date)
 	weight.Value = data.Value
 
@@ -64,31 +55,24 @@ func (handler *WeightHandler) CreateWeight(c *gin.Context) {
 
 func (handler *WeightHandler) DeleteWeight(c *gin.Context) {
 	var (
-		err error
+		err    error
+		userId uint
 	)
 
-	// Get the user from the refresh token
-	userId, exists := c.Get("x-user-id")
-	if !exists {
-		c.JSON(500, gin.H{"error": "User id missing"})
-		return
-	}
-	userIdstring := userId.(string)
-	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "User id missing"})
+	if userId, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
 	weightDate := c.Param("date")
-	weightDateInt, err := strconv.ParseInt(weightDate, 10, 64)
+	weightDateInt, err := strconv.Atoi(weightDate)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Cannot read weight date"})
 		return
 	}
 
 	// Delete the weight from the database
-	if err = handler.controller.DeleteWeightByDate(uint(userIdUint), int(weightDateInt)); err != nil {
+	if err = handler.controller.DeleteWeightByDate(userId, weightDateInt); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
@@ -101,19 +85,11 @@ func (handler *WeightHandler) UpdateWeight(c *gin.Context) {
 	var (
 		weight weightModel.Public
 		err    error
+		userId uint
 	)
 
-	// Get the user from the refresh token
-	userId, exists := c.Get("x-user-id")
-	if !exists {
-		c.JSON(500, gin.H{"error": "User id missing"})
-		return
-	}
-	// Paste it into the weight object
-	userIdstring := userId.(string)
-	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "Cannot read user id"})
+	if userId, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -123,7 +99,7 @@ func (handler *WeightHandler) UpdateWeight(c *gin.Context) {
 	}
 
 	// Update the weight in the database
-	if err = handler.controller.UpdateWeightByDate(uint(userIdUint), &weight); err != nil {
+	if err = handler.controller.UpdateWeightByDate(userId, &weight); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -134,23 +110,15 @@ func (handler *WeightHandler) GetLatestWeight(c *gin.Context) {
 	var (
 		weightResult *weightModel.Weight
 		err          error
+		userId       uint
 	)
-
-	// Get the user from the refresh token
-	userId, exists := c.Get("x-user-id")
-	if !exists {
-		c.JSON(500, gin.H{"error": "User id missing"})
-		return
-	}
-	userIdstring := userId.(string)
-	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "User id missing"})
+	if userId, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Retrieve the weight with the given ID from the database
-	if weightResult, err = handler.controller.GetLatestWeight(uint(userIdUint)); err != nil {
+	if weightResult, err = handler.controller.GetLatestWeight(userId); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
@@ -162,23 +130,16 @@ func (handler *WeightHandler) GetWeights(c *gin.Context) {
 	var (
 		weights []*weightModel.Public
 		err     error
+		userId  uint
 	)
 
-	// Get the user from the refresh token
-	userId, exists := c.Get("x-user-id")
-	if !exists {
-		c.JSON(500, gin.H{"error": "User id missing"})
-		return
-	}
-	userIdstring := userId.(string)
-	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "User id missing"})
+	if userId, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Retrieve the weights with the given ID from the database
-	if weights, err = handler.controller.GetWeights(uint(userIdUint)); err != nil {
+	if weights, err = handler.controller.GetWeights(userId); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
@@ -191,34 +152,27 @@ func (handler *WeightHandler) GetWeightsBetween(c *gin.Context) {
 	var (
 		weights []*weightModel.Public
 		err     error
+		userId  uint
 	)
 
-	// Get the user from the refresh token
-	userId, exists := c.Get("x-user-id")
-	if !exists {
-		c.JSON(500, gin.H{"error": "User id missing"})
-		return
-	}
-	userIdstring := userId.(string)
-	userIdUint, err := strconv.ParseUint(userIdstring, 10, 32)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "User id missing"})
+	if userId, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	startDate, err := strconv.ParseInt(c.Param("start"), 10, 64)
+	startDate, err := strconv.Atoi(c.Param("start"))
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Cannot recognize start date"})
 		return
 	}
-	endDate, err := strconv.ParseInt(c.Param("end"), 10, 64)
+	endDate, err := strconv.Atoi(c.Param("end"))
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Cannot recognize end date"})
 		return
 	}
 
 	// Retrieve the weights with the given ID from the database
-	if weights, err = handler.controller.GetWeightsBetween(uint(userIdUint), int(startDate), int(endDate)); err != nil {
+	if weights, err = handler.controller.GetWeightsBetween(userId, startDate, endDate); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}

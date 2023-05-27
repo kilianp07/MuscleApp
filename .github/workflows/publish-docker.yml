@@ -18,7 +18,7 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        
+      
     - name: Build the hello-world Docker image
       run: |
         docker build . --tag ghcr.io/kilianp07/muscleapp:latest
