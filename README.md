@@ -1,5 +1,6 @@
 # MuscleApp BackEnd
 
+[![CodeFactor](https://www.codefactor.io/repository/github/kilianp07/muscleapp/badge)](https://www.codefactor.io/repository/github/kilianp07/muscleapp)
 
 ## Installation
 
