@@ -25,7 +25,10 @@ services:
             - my-db:/var/lib/mysql
 
     api:
-        image: ghcr.io/kilianp07/muscleapp:latest
+        # image: ghcr.io/kilianp07/muscleapp:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
         depends_on:
             db:
                 condition: service_healthy

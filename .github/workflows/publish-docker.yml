@@ -7,7 +7,7 @@ on:
         branches: [main]
 
 jobs:
-    publish-hello-world-image:
+    publish-docker-image:
         runs-on: ubuntu-latest
 
         steps:
