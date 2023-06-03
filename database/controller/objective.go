@@ -14,12 +14,12 @@ func (c *Controller) GetObjectiveByUserID(userId uint) (*objectiveModel.Public, 
 	return objectiveModel.ModelToPublic(&objective), nil
 }
 
-func (c *Controller) UpdateObjective(objective *objectiveModel.Objective) error {
-	return c.db.Save(&objective).Error
+func (c *Controller) UpdateObjective(objective *objectiveModel.Objective, id int) error {
+	return c.db.Save(&objective).Where("ID = ?", id).Error
 }
 
-func (c *Controller) DeleteObjective(objective *objectiveModel.Objective) error {
-	return c.db.Delete(&objective).Error
+func (c *Controller) DeleteObjective(objective *objectiveModel.Objective, id int) error {
+	return c.db.Delete(&objective).Where("ID = ?", id).Error
 }
 
 func (c *Controller) GetAllObjectives(userId uint) ([]objectiveModel.Public, error) {

@@ -92,7 +92,7 @@ func (handler *ObjectiveHandler) UpdateObjective(c *gin.Context) {
 
 	objective = objectiveModel.PublicToModel(&data, objective.UserID)
 
-	if err = handler.controller.UpdateObjective(objective); err != nil {
+	if err = handler.controller.UpdateObjective(objective, 1); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -121,7 +121,7 @@ func (handler *ObjectiveHandler) DeleteObjective(c *gin.Context) {
 
 	objective = objectiveModel.PublicToModel(&data, userId)
 
-	if err = handler.controller.DeleteObjective(objective); err != nil {
+	if err = handler.controller.DeleteObjective(objective, int(userId)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
