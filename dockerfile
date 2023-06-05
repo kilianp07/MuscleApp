@@ -1,4 +1,4 @@
-From golang:1.20
+FROM golang:1.20
 LABEL org.opencontainers.image.source="https://github.com/kilianp07/MuscleApp"
 WORKDIR /go/src/app
 
