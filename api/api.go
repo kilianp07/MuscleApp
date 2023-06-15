@@ -68,6 +68,7 @@ func (api *Api) createGroups(r *gin.Engine) {
 		weight.GET("/", api.weightH.GetWeights)
 		weight.GET("/:start/:end", api.weightH.GetWeightsBetween)
 		weight.DELETE("/:date", api.weightH.DeleteWeight)
+		weight.GET("/initial", api.weightH.GetInitialWeight)
 
 	}
 

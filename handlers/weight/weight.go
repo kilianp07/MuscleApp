@@ -147,6 +147,26 @@ func (handler *WeightHandler) GetWeights(c *gin.Context) {
 	c.JSON(http.StatusOK, weights)
 }
 
+func (handler *WeightHandler) GetInitialWeight(c *gin.Context) {
+	var (
+		weightResult *weightModel.Weight
+		err          error
+		userId       uint
+	)
+	if userId, err = gincontext.GetUserId(c); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Retrieve the weight with the given ID from the database
+	if weightResult, err = handler.controller.GetInitialWeight(userId); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, weightResult)
+}
+
 // Get between two timestamps (start and end)
 func (handler *WeightHandler) GetWeightsBetween(c *gin.Context) {
 	var (

@@ -34,6 +34,14 @@ func (c *Controller) CreateWeight(weight *weightModel.Weight) error {
 	return c.db.Create(&weight).Error
 }
 
+func (c *Controller) GetInitialWeight(userId uint) (*weightModel.Weight, error) {
+	var weight weightModel.Weight
+	if err := c.db.Where("user_id = ?", userId).First(&weight).Error; err != nil {
+		return nil, err
+	}
+	return &weight, nil
+}
+
 func (c *Controller) DeleteWeight(id uint) error {
 	return c.db.Delete(&weightModel.Weight{}, id).Error
 }
