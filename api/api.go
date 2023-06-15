@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kilianp07/MuscleApp/database"
 	authHandler "github.com/kilianp07/MuscleApp/handlers/auth"
+	exerciseHandler "github.com/kilianp07/MuscleApp/handlers/exercise"
 	objectiveHandler "github.com/kilianp07/MuscleApp/handlers/objective"
 	userHandler "github.com/kilianp07/MuscleApp/handlers/user"
 	weightHandler "github.com/kilianp07/MuscleApp/handlers/weight"
@@ -18,6 +19,7 @@ type Api struct {
 	authH      *authHandler.AuthHandler
 	weightH    *weightHandler.WeightHandler
 	objectiveH *objectiveHandler.ObjectiveHandler
+	exerciseH  *exerciseHandler.ExerciseHandler
 	db         *gorm.DB
 }
 
@@ -32,6 +34,7 @@ func NewApi() *Api {
 		authH:      authHandler.NewAuthHandler(db),
 		weightH:    weightHandler.NewWeightHandler(db),
 		objectiveH: objectiveHandler.NewObjectiveHandler(db),
+		exerciseH:  exerciseHandler.NewExerciseHandler(db),
 		db:         db,
 	}
 }
@@ -78,6 +81,15 @@ func (api *Api) createGroups(r *gin.Engine) {
 		objective.GET("/", api.objectiveH.GetObjectives)
 		objective.PUT("/:id", api.objectiveH.UpdateObjective)
 		objective.DELETE("/:id", api.objectiveH.DeleteObjective)
+	}
+
+	exercise := r.Group("/exercise", tokenutil.JwtAuthMiddleware())
+	{
+		exercise.POST("/", api.exerciseH.CreateExercise)
+		exercise.GET("/:id", api.exerciseH.GetExerciseByID)
+		exercise.GET("/:number", api.exerciseH.GetSomeExercises)
+		exercise.PUT("/:id", api.exerciseH.UpdateExercise)
+		exercise.DELETE("/:id", api.exerciseH.DeleteExercise)
 	}
 }
 
