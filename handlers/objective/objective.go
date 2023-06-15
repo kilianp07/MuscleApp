@@ -26,7 +26,7 @@ func (handler *ObjectiveHandler) CreateObjective(c *gin.Context) {
 
 	var (
 		data      objectiveModel.Public
-		objective *objectiveModel.Objective
+		objective objectiveModel.Objective
 		err       error
 	)
 
@@ -40,14 +40,14 @@ func (handler *ObjectiveHandler) CreateObjective(c *gin.Context) {
 		return
 	}
 
-	objective = objectiveModel.PublicToModel(&data, objective.UserID)
+	objective = *objectiveModel.PublicToModel(&data, objective.UserID)
 
-	if err = handler.controller.CreateObjective(objective); err != nil {
+	if err = handler.controller.CreateObjective(&objective); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, objectiveModel.ModelToPublic(objective))
+	c.JSON(http.StatusOK, objectiveModel.ModelToPublic(&objective))
 }
 
 func (handler *ObjectiveHandler) GetObjectives(c *gin.Context) {

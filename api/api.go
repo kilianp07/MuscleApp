@@ -87,7 +87,7 @@ func (api *Api) createGroups(r *gin.Engine) {
 	{
 		exercise.POST("/", api.exerciseH.CreateExercise)
 		exercise.GET("/:id", api.exerciseH.GetExerciseByID)
-		exercise.GET("/:number", api.exerciseH.GetSomeExercises)
+		exercise.GET("/some/:number", api.exerciseH.GetSomeExercises)
 		exercise.PUT("/:id", api.exerciseH.UpdateExercise)
 		exercise.DELETE("/:id", api.exerciseH.DeleteExercise)
 	}
