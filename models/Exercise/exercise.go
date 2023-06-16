@@ -12,6 +12,7 @@ type Exercise struct {
 }
 
 type Public struct {
+	ID          uint   `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Image       string `json:"image"`
@@ -20,6 +21,7 @@ type Public struct {
 
 func ModelToPublic(exercise *Exercise) *Public {
 	return &Public{
+		ID:          exercise.ID,
 		Title:       exercise.Title,
 		Description: exercise.Description,
 		Image:       exercise.Image,
@@ -27,7 +29,7 @@ func ModelToPublic(exercise *Exercise) *Public {
 	}
 }
 
-func PublicToMode(public *Public, exerciseId uint) *Exercise {
+func PublicToModel(public *Public, exerciseId uint) *Exercise {
 	return &Exercise{
 		ID:          exerciseId,
 		Title:       public.Title,
