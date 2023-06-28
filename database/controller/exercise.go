@@ -36,10 +36,14 @@ func (c *Controller) UpdateExercise(data *exerciseModel.Exercise) error {
 		return err
 	}
 
-	exercise.Title = data.Title
-	exercise.Description = data.Description
-	exercise.Image = data.Image
-	exercise.Video = data.Video
+	exercise = exerciseModel.Exercise{
+		Title:       data.Title,
+		Description: data.Description,
+		Video:       data.Video,
+		Difficulty:  data.Difficulty,
+		Member:      data.Member,
+		Type:        data.Type,
+	}
 
 	return c.db.Save(&exercise).Where("ID = ?", exercise.ID).Error
 }

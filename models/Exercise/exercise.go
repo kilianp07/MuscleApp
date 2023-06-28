@@ -7,23 +7,29 @@ type Exercise struct {
 	ID          uint   `json:"id" gorm:"primaryKey"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Image       string `json:"image"`
 	Video       string `json:"video"`
+	Difficulty  uint   `json:"difficulty"`
+	Member      string `json:"member"`
+	Type        string `json:"type"`
 }
 
 type Public struct {
 	ID          uint   `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Image       string `json:"image"`
 	Video       string `json:"video"`
+	Difficulty  uint   `json:"difficulty"`
+	Member      string `json:"member"`
+	Type        string `json:"type"`
 }
 
 type Create struct {
 	Title       string `json:"title" binding:"required"`
 	Description string `json:"description" binding:"required"`
-	Image       string `json:"image" binding:"required"`
 	Video       string `json:"video" binding:"required"`
+	Difficulty  uint   `json:"difficulty" binding:"required"`
+	Member      string `json:"member" binding:"required"`
+	Type        string `json:"type" binding:"required"`
 }
 
 func ModelToPublic(exercise *Exercise) *Public {
@@ -31,8 +37,10 @@ func ModelToPublic(exercise *Exercise) *Public {
 		ID:          exercise.ID,
 		Title:       exercise.Title,
 		Description: exercise.Description,
-		Image:       exercise.Image,
 		Video:       exercise.Video,
+		Difficulty:  exercise.Difficulty,
+		Member:      exercise.Member,
+		Type:        exercise.Type,
 	}
 }
 
@@ -40,8 +48,10 @@ func CreateToModel(create *Create) *Exercise {
 	return &Exercise{
 		Title:       create.Title,
 		Description: create.Description,
-		Image:       create.Image,
 		Video:       create.Video,
+		Difficulty:  create.Difficulty,
+		Member:      create.Member,
+		Type:        create.Type,
 	}
 }
 func PublicToModel(public *Public, exerciseId uint) *Exercise {
@@ -49,7 +59,9 @@ func PublicToModel(public *Public, exerciseId uint) *Exercise {
 		ID:          exerciseId,
 		Title:       public.Title,
 		Description: public.Description,
-		Image:       public.Image,
 		Video:       public.Video,
+		Difficulty:  public.Difficulty,
+		Member:      public.Member,
+		Type:        public.Type,
 	}
 }
