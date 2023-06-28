@@ -16,12 +16,14 @@ type Weight struct {
 }
 
 type Public struct {
+	ID    uint    `json:"id"`
 	Date  int64   `json:"date" binding:"required"`
 	Value float64 `json:"value" binding:"required"`
 }
 
 func ModelToPublic(weight *Weight) *Public {
 	return &Public{
+		ID:    weight.ID,
 		Date:  timeUtils.TimeToTimestamp(weight.Date),
 		Value: weight.Value,
 	}

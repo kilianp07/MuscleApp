@@ -113,7 +113,12 @@ func (handler *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, userModel.ModelToPublic(userModel.CreateToModel(user)))
+	if retreviedUser, err = handler.controller.GetUserByID(userId); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, userModel.ModelToPublic(retreviedUser))
 }
 
 func (handler *UserHandler) DeleteUser(c *gin.Context) {
