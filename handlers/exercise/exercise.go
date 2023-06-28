@@ -40,12 +40,7 @@ func (handler *ExerciseHandler) CreateExercise(c *gin.Context) {
 		return
 	}
 
-	exercise = &exerciseModel.Exercise{
-		Title:       data.Title,
-		Description: data.Description,
-		Image:       data.Image,
-		Video:       data.Video,
-	}
+	exercise = exerciseModel.CreateToModel(&data)
 
 	if err = handler.controller.CreateExercise(exercise); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -133,13 +128,7 @@ func (handler *ExerciseHandler) UpdateExercise(c *gin.Context) {
 		return
 	}
 
-	exercise = &exerciseModel.Exercise{
-		Title:       data.Title,
-		Description: data.Description,
-		Image:       data.Image,
-		Video:       data.Video,
-		ID:          uint(idint),
-	}
+	exercise = exerciseModel.PublicToModel(&data, uint(idint))
 
 	if err = handler.controller.UpdateExercise(exercise); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
