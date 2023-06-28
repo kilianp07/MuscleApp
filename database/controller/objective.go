@@ -35,12 +35,7 @@ func (c *Controller) UpdateObjective(objective *objectiveModel.Objective, id int
 	existingObjective.Description = objective.Description
 	existingObjective.Date = objective.Date
 
-	// Perform the update operation
-	if err := c.db.Save(&existingObjective).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return c.db.Save(&existingObjective).Error
 }
 
 func (c *Controller) DeleteObjective(objective *objectiveModel.Objective) error {
