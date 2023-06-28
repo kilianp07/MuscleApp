@@ -19,3 +19,7 @@ repos:
           - id: go-unit-tests
           - id: go-build
           - id: go-mod-tidy
+    - repo: https://github.com/kilianp07/gomarkdoc-pre-commit
+      rev: v0.0.2
+      hooks:
+          - id: gomarkdoc
