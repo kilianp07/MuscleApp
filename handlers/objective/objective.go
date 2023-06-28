@@ -2,6 +2,7 @@ package objectiveHandler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kilianp07/MuscleApp/database/controller"
@@ -78,7 +79,16 @@ func (handler *ObjectiveHandler) UpdateObjective(c *gin.Context) {
 		data      objectiveModel.Public
 		objective *objectiveModel.Objective
 		err       error
+		id        int
 	)
+
+	objective = &objectiveModel.Objective{}
+
+	idS := c.Param("id")
+	if id, err = strconv.Atoi(idS); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	if objective.UserID, err = gincontext.GetUserId(c); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -92,9 +102,13 @@ func (handler *ObjectiveHandler) UpdateObjective(c *gin.Context) {
 
 	objective = objectiveModel.PublicToModel(&data, objective.UserID)
 
-	if err = handler.controller.UpdateObjective(objective, 1); err != nil {
+	if err = handler.controller.UpdateObjective(objective, id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	if objective, err = handler.controller.GetObjectiveByID(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
 	c.JSON(http.StatusOK, objectiveModel.ModelToPublic(objective))
@@ -103,25 +117,23 @@ func (handler *ObjectiveHandler) UpdateObjective(c *gin.Context) {
 func (handler *ObjectiveHandler) DeleteObjective(c *gin.Context) {
 
 	var (
-		userId    uint
-		data      objectiveModel.Public
 		objective *objectiveModel.Objective
 		err       error
+		id        int
 	)
 
-	if userId, err = gincontext.GetUserId(c); err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err = c.ShouldBindJSON(&data); err != nil {
+	idS := c.Param("id")
+	if id, err = strconv.Atoi(idS); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	objective = objectiveModel.PublicToModel(&data, userId)
+	if objective, err = handler.controller.GetObjectiveByID(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
-	if err = handler.controller.DeleteObjective(objective, int(userId)); err != nil {
+	if err = handler.controller.DeleteObjective(objective); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 

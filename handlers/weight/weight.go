@@ -50,29 +50,23 @@ func (handler *WeightHandler) CreateWeight(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, weight)
+	c.JSON(http.StatusCreated, weightModel.ModelToPublic(&weight))
 }
 
 func (handler *WeightHandler) DeleteWeight(c *gin.Context) {
 	var (
-		err    error
-		userId uint
+		err error
 	)
 
-	if userId, err = gincontext.GetUserId(c); err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	weightDate := c.Param("date")
-	weightDateInt, err := strconv.Atoi(weightDate)
+	idS := c.Param("id")
+	id, err := strconv.Atoi(idS)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Cannot read weight date"})
 		return
 	}
 
 	// Delete the weight from the database
-	if err = handler.controller.DeleteWeightByDate(userId, weightDateInt); err != nil {
+	if err = handler.controller.DeleteWeight(uint(id)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
@@ -108,7 +102,7 @@ func (handler *WeightHandler) UpdateWeight(c *gin.Context) {
 
 func (handler *WeightHandler) GetLatestWeight(c *gin.Context) {
 	var (
-		weightResult *weightModel.Weight
+		weightResult *weightModel.Public
 		err          error
 		userId       uint
 	)
@@ -164,7 +158,7 @@ func (handler *WeightHandler) GetInitialWeight(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, weightResult)
+	c.JSON(http.StatusOK, weightModel.ModelToPublic(weightResult))
 }
 
 // Get between two timestamps (start and end)

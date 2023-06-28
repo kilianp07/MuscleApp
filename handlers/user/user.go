@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kilianp07/MuscleApp/database/controller"
 	userModel "github.com/kilianp07/MuscleApp/models/user"
+	"github.com/kilianp07/MuscleApp/utils/auth"
 	gincontext "github.com/kilianp07/MuscleApp/utils/gin_context"
 	"gorm.io/gorm"
 )
@@ -24,7 +25,7 @@ func NewUserHandler(db *gorm.DB) *UserHandler {
 
 func (handler *UserHandler) CreateUser(c *gin.Context) {
 	var (
-		user userModel.User
+		user userModel.Create
 		err  error
 	)
 
@@ -36,7 +37,7 @@ func (handler *UserHandler) CreateUser(c *gin.Context) {
 	}
 
 	// Save the user to the database
-	if err = handler.controller.CreateUser(&user); err != nil {
+	if err = handler.controller.CreateUser(userModel.CreateToModel(&user)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -66,9 +67,10 @@ func (handler *UserHandler) GetUserByID(c *gin.Context) {
 
 func (handler *UserHandler) UpdateUser(c *gin.Context) {
 	var (
-		user   *userModel.User
-		err    error
-		userId uint
+		user          *userModel.Create
+		retreviedUser *userModel.User
+		err           error
+		userId        uint
 	)
 
 	if userId, err = gincontext.GetUserId(c); err != nil {
@@ -77,8 +79,13 @@ func (handler *UserHandler) UpdateUser(c *gin.Context) {
 	}
 
 	// Check if the user exists
-	if user, err = handler.controller.GetUserByID(userId); err != nil {
+	if retreviedUser, err = handler.controller.GetUserByID(userId); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	if retreviedUser == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
 
@@ -88,13 +95,30 @@ func (handler *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	// Update the user in the database
-	if err := handler.db.Save(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+	if user.Password, err = auth.HashPassword(user.Password); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, userModel.ModelToPublic(user))
+	// Copy user in retrieved user
+	retreviedUser.Name = user.Name
+	retreviedUser.Email = user.Email
+	retreviedUser.Password = user.Password
+	retreviedUser.Username = user.Username
+	retreviedUser.Surname = user.Surname
+
+	// Update the user in the database
+	if err := handler.db.Save(&retreviedUser).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if retreviedUser, err = handler.controller.GetUserByID(userId); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, userModel.ModelToPublic(retreviedUser))
 }
 
 func (handler *UserHandler) DeleteUser(c *gin.Context) {

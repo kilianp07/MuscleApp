@@ -5,12 +5,12 @@ import (
 	timeUtils "github.com/kilianp07/MuscleApp/utils/time"
 )
 
-func (c *Controller) GetLatestWeight(userId uint) (*weightModel.Weight, error) {
+func (c *Controller) GetLatestWeight(userId uint) (*weightModel.Public, error) {
 	var weight weightModel.Weight
 	if err := c.db.Where("user_id = ?", userId).Last(&weight).Error; err != nil {
 		return nil, err
 	}
-	return &weight, nil
+	return weightModel.ModelToPublic(&weight), nil
 }
 
 func (c *Controller) GetWeights(userId uint) ([]*weightModel.Public, error) {

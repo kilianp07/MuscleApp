@@ -18,6 +18,7 @@ type Objective struct {
 }
 
 type Public struct {
+	ID          uint    `json:"id"`
 	Title       string  `json:"title"`
 	Weight      float32 `json:"weight"`
 	Description string  `json:"description"`
@@ -26,6 +27,7 @@ type Public struct {
 
 func ModelToPublic(objective *Objective) *Public {
 	return &Public{
+		ID:          objective.ID,
 		Title:       objective.Title,
 		Weight:      objective.Weight,
 		Description: objective.Description,
