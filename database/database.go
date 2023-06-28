@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	exerciseModel "github.com/kilianp07/MuscleApp/models/Exercise"
 	objectiveModel "github.com/kilianp07/MuscleApp/models/objective"
 	userModel "github.com/kilianp07/MuscleApp/models/user"
 	weightModel "github.com/kilianp07/MuscleApp/models/weight"
@@ -15,6 +16,7 @@ var models = []any{
 	&userModel.User{},
 	&weightModel.Weight{},
 	&objectiveModel.Objective{},
+	&exerciseModel.Exercise{},
 }
 
 func ConnectDatabase() (*gorm.DB, error) {

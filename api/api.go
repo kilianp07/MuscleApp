@@ -54,7 +54,7 @@ func (api *Api) createGroups(r *gin.Engine) {
 	{
 		user.GET("/", tokenutil.JwtAuthMiddleware(), api.userH.GetUserByID)
 		user.POST("/", api.userH.CreateUser)
-		user.PUT("/:id", tokenutil.JwtAuthMiddleware(), api.userH.UpdateUser)
+		user.PUT("/", tokenutil.JwtAuthMiddleware(), api.userH.UpdateUser)
 		user.DELETE("/:id", api.userH.DeleteUser)
 	}
 

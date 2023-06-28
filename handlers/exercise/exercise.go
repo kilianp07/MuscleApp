@@ -24,9 +24,10 @@ func NewExerciseHandler(db *gorm.DB) *ExerciseHandler {
 
 func (handler *ExerciseHandler) CreateExercise(c *gin.Context) {
 	var (
-		data     exerciseModel.Public
+		data     exerciseModel.Create
 		exercise *exerciseModel.Exercise
 		err      error
+		ex       *exerciseModel.Public
 	)
 
 	_, err = gincontext.GetUserId(c)
@@ -51,7 +52,11 @@ func (handler *ExerciseHandler) CreateExercise(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, exerciseModel.ModelToPublic(exercise))
+	if ex, err = handler.controller.GetLatestExercise(); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(200, ex)
 }
 
 func (handler *ExerciseHandler) GetExerciseByID(c *gin.Context) {
@@ -128,11 +133,13 @@ func (handler *ExerciseHandler) UpdateExercise(c *gin.Context) {
 		return
 	}
 
-	exercise.Title = data.Title
-	exercise.Description = data.Description
-	exercise.Image = data.Image
-	exercise.Video = data.Video
-	exercise.ID = uint(idint)
+	exercise = &exerciseModel.Exercise{
+		Title:       data.Title,
+		Description: data.Description,
+		Image:       data.Image,
+		Video:       data.Video,
+		ID:          uint(idint),
+	}
 
 	if err = handler.controller.UpdateExercise(exercise); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -167,12 +174,14 @@ func (handler *ExerciseHandler) DeleteExercise(c *gin.Context) {
 		return
 	}
 
-	exercise.ID = uint(idint)
+	exercise = &exerciseModel.Exercise{
+		ID: uint(idint),
+	}
 
 	if err = handler.controller.DeleteExercise(exercise); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, exerciseModel.ModelToPublic(exercise))
+	c.JSON(200, gin.H{"message": "Exercise deleted"})
 }

@@ -26,6 +26,14 @@ type Public struct {
 	Email    string `json:"email"`
 }
 
+type Create struct {
+	Name     string `json:"name"  binding:"required"`
+	Email    string `json:"email" gorm:"unique"  binding:"required"`
+	Surname  string `json:"surname"  binding:"required"`
+	Username string `json:"username" gorm:"unique"  binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 func ModelToPublic(user *User) *Public {
 	return &Public{
 		ID:       user.ID,
@@ -33,5 +41,14 @@ func ModelToPublic(user *User) *Public {
 		Surname:  user.Surname,
 		Username: user.Username,
 		Email:    user.Email,
+	}
+}
+func CreateToModel(user *Create) *User {
+	return &User{
+		Name:     user.Name,
+		Surname:  user.Surname,
+		Username: user.Username,
+		Email:    user.Email,
+		Password: user.Password,
 	}
 }
