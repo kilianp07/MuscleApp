@@ -25,7 +25,7 @@ func NewExerciseHandler(db *gorm.DB) *ExerciseHandler {
 func (handler *ExerciseHandler) CreateExercise(c *gin.Context) {
 	var (
 		data     exerciseModel.Create
-		exercise *exerciseModel.Exercise
+		exercise exerciseModel.Exercise
 		err      error
 		ex       *exerciseModel.Public
 	)
@@ -42,7 +42,7 @@ func (handler *ExerciseHandler) CreateExercise(c *gin.Context) {
 
 	exercise = exerciseModel.CreateToModel(&data)
 
-	if err = handler.controller.CreateExercise(exercise); err != nil {
+	if err = handler.controller.CreateExercise(&exercise); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
