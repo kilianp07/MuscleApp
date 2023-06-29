@@ -6,6 +6,8 @@ import (
 
 	exerciseModel "github.com/kilianp07/MuscleApp/models/Exercise"
 	objectiveModel "github.com/kilianp07/MuscleApp/models/objective"
+	sessionModel "github.com/kilianp07/MuscleApp/models/session"
+	sessionexerciseModel "github.com/kilianp07/MuscleApp/models/sessionExercise"
 	userModel "github.com/kilianp07/MuscleApp/models/user"
 	weightModel "github.com/kilianp07/MuscleApp/models/weight"
 	"gorm.io/driver/mysql"
@@ -17,6 +19,8 @@ var models = []any{
 	&weightModel.Weight{},
 	&objectiveModel.Objective{},
 	&exerciseModel.Exercise{},
+	&sessionModel.Session{},
+	&sessionexerciseModel.SessionExercise{},
 }
 
 func ConnectDatabase() (*gorm.DB, error) {

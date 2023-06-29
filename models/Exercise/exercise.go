@@ -44,8 +44,8 @@ func ModelToPublic(exercise *Exercise) *Public {
 	}
 }
 
-func CreateToModel(create *Create) *Exercise {
-	return &Exercise{
+func CreateToModel(create *Create) Exercise {
+	return Exercise{
 		Title:       create.Title,
 		Description: create.Description,
 		Video:       create.Video,

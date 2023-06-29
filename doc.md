@@ -25,7 +25,7 @@ import "github.com/kilianp07/MuscleApp/api"
 
 
 <a name="CORS"></a>
-## func [CORS](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L96>)
+## func [CORS](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L108>)
 
 ```go
 func CORS() gin.HandlerFunc
@@ -34,7 +34,7 @@ func CORS() gin.HandlerFunc
 
 
 <a name="Api"></a>
-## type [Api](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L17-L24>)
+## type [Api](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L18-L26>)
 
 
 
@@ -45,7 +45,7 @@ type Api struct {
 ```
 
 <a name="NewApi"></a>
-### func [NewApi](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L26>)
+### func [NewApi](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L28>)
 
 ```go
 func NewApi() *Api
@@ -54,7 +54,7 @@ func NewApi() *Api
 
 
 <a name="Api.StartApi"></a>
-### func \(\*Api\) [StartApi](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L42>)
+### func \(\*Api\) [StartApi](<https://github.com/kilianp07/MuscleApp/blob/main/api/api.go#L45>)
 
 ```go
 func (api *Api) StartApi()
@@ -74,7 +74,7 @@ import "github.com/kilianp07/MuscleApp/database"
 
 
 <a name="ConnectDatabase"></a>
-## func [ConnectDatabase](<https://github.com/kilianp07/MuscleApp/blob/main/database/database.go#L22>)
+## func [ConnectDatabase](<https://github.com/kilianp07/MuscleApp/blob/main/database/database.go#L26>)
 
 ```go
 func ConnectDatabase() (*gorm.DB, error)
@@ -94,19 +94,23 @@ import "github.com/kilianp07/MuscleApp/database/controller"
   - [func NewController\(db \*gorm.DB\) \*Controller](<#NewController>)
   - [func \(c \*Controller\) CreateExercise\(exercise \*exerciseModel.Exercise\) error](<#Controller.CreateExercise>)
   - [func \(c \*Controller\) CreateObjective\(objective \*objectiveModel.Objective\) error](<#Controller.CreateObjective>)
+  - [func \(c \*Controller\) CreateSession\(session \*sessionModel.Session\) error](<#Controller.CreateSession>)
   - [func \(c \*Controller\) CreateUser\(user \*userModel.User\) error](<#Controller.CreateUser>)
   - [func \(c \*Controller\) CreateWeight\(weight \*weightModel.Weight\) error](<#Controller.CreateWeight>)
   - [func \(c \*Controller\) DeleteExercise\(exercise \*exerciseModel.Exercise\) error](<#Controller.DeleteExercise>)
   - [func \(c \*Controller\) DeleteObjective\(objective \*objectiveModel.Objective\) error](<#Controller.DeleteObjective>)
+  - [func \(c \*Controller\) DeleteSession\(session \*sessionModel.Session\) error](<#Controller.DeleteSession>)
   - [func \(c \*Controller\) DeleteWeight\(id uint\) error](<#Controller.DeleteWeight>)
   - [func \(c \*Controller\) DeleteWeightByDate\(userId uint, date int\) error](<#Controller.DeleteWeightByDate>)
   - [func \(c \*Controller\) GetAllObjectives\(userId uint\) \(\[\]objectiveModel.Public, error\)](<#Controller.GetAllObjectives>)
+  - [func \(c \*Controller\) GetAllSessions\(userId uint\) \(\[\]sessionModel.Session, error\)](<#Controller.GetAllSessions>)
   - [func \(c \*Controller\) GetExerciseByID\(id int\) \(\*exerciseModel.Public, error\)](<#Controller.GetExerciseByID>)
   - [func \(c \*Controller\) GetInitialWeight\(userId uint\) \(\*weightModel.Weight, error\)](<#Controller.GetInitialWeight>)
   - [func \(c \*Controller\) GetLatestExercise\(\) \(\*exerciseModel.Public, error\)](<#Controller.GetLatestExercise>)
   - [func \(c \*Controller\) GetLatestWeight\(userId uint\) \(\*weightModel.Public, error\)](<#Controller.GetLatestWeight>)
   - [func \(c \*Controller\) GetObjectiveByID\(id int\) \(\*objectiveModel.Objective, error\)](<#Controller.GetObjectiveByID>)
   - [func \(c \*Controller\) GetObjectiveByUserID\(userId uint\) \(\*objectiveModel.Public, error\)](<#Controller.GetObjectiveByUserID>)
+  - [func \(c \*Controller\) GetSessionByID\(id string\) \(\*sessionModel.Session, error\)](<#Controller.GetSessionByID>)
   - [func \(c \*Controller\) GetSomeExercises\(number int\) \(\[\]exerciseModel.Public, error\)](<#Controller.GetSomeExercises>)
   - [func \(c \*Controller\) GetUserByEmail\(email string\) \(\*userModel.User, error\)](<#Controller.GetUserByEmail>)
   - [func \(c \*Controller\) GetUserByID\(id uint\) \(\*userModel.User, error\)](<#Controller.GetUserByID>)
@@ -114,6 +118,7 @@ import "github.com/kilianp07/MuscleApp/database/controller"
   - [func \(c \*Controller\) GetWeightsBetween\(userId uint, start int, end int\) \(\[\]\*weightModel.Public, error\)](<#Controller.GetWeightsBetween>)
   - [func \(c \*Controller\) UpdateExercise\(data \*exerciseModel.Exercise\) error](<#Controller.UpdateExercise>)
   - [func \(c \*Controller\) UpdateObjective\(objective \*objectiveModel.Objective, id int\) error](<#Controller.UpdateObjective>)
+  - [func \(c \*Controller\) UpdateSession\(session \*sessionModel.Session\) error](<#Controller.UpdateSession>)
   - [func \(c \*Controller\) UpdateWeight\(weight \*weightModel.Weight\) error](<#Controller.UpdateWeight>)
   - [func \(c \*Controller\) UpdateWeightByDate\(userId uint, weight \*weightModel.Public\) error](<#Controller.UpdateWeightByDate>)
 
@@ -156,6 +161,15 @@ func (c *Controller) CreateObjective(objective *objectiveModel.Objective) error
 
 
 
+<a name="Controller.CreateSession"></a>
+### func \(\*Controller\) [CreateSession](<https://github.com/kilianp07/MuscleApp/blob/main/database/controller/session.go#L8>)
+
+```go
+func (c *Controller) CreateSession(session *sessionModel.Session) error
+```
+
+
+
 <a name="Controller.CreateUser"></a>
 ### func \(\*Controller\) [CreateUser](<https://github.com/kilianp07/MuscleApp/blob/main/database/controller/user.go#L37>)
 
@@ -192,6 +206,15 @@ func (c *Controller) DeleteObjective(objective *objectiveModel.Objective) error
 
 
 
+<a name="Controller.DeleteSession"></a>
+### func \(\*Controller\) [DeleteSession](<https://github.com/kilianp07/MuscleApp/blob/main/database/controller/session.go#L24>)
+
+```go
+func (c *Controller) DeleteSession(session *sessionModel.Session) error
+```
+
+
+
 <a name="Controller.DeleteWeight"></a>
 ### func \(\*Controller\) [DeleteWeight](<https://github.com/kilianp07/MuscleApp/blob/main/database/controller/weight.go#L45>)
 
@@ -215,6 +238,15 @@ func (c *Controller) DeleteWeightByDate(userId uint, date int) error
 
 ```go
 func (c *Controller) GetAllObjectives(userId uint) ([]objectiveModel.Public, error)
+```
+
+
+
+<a name="Controller.GetAllSessions"></a>
+### func \(\*Controller\) [GetAllSessions](<https://github.com/kilianp07/MuscleApp/blob/main/database/controller/session.go#L28>)
+
+```go
+func (c *Controller) GetAllSessions(userId uint) ([]sessionModel.Session, error)
 ```
 
 
@@ -269,6 +301,15 @@ func (c *Controller) GetObjectiveByID(id int) (*objectiveModel.Objective, error)
 
 ```go
 func (c *Controller) GetObjectiveByUserID(userId uint) (*objectiveModel.Public, error)
+```
+
+
+
+<a name="Controller.GetSessionByID"></a>
+### func \(\*Controller\) [GetSessionByID](<https://github.com/kilianp07/MuscleApp/blob/main/database/controller/session.go#L12>)
+
+```go
+func (c *Controller) GetSessionByID(id string) (*sessionModel.Session, error)
 ```
 
 
@@ -332,6 +373,15 @@ func (c *Controller) UpdateExercise(data *exerciseModel.Exercise) error
 
 ```go
 func (c *Controller) UpdateObjective(objective *objectiveModel.Objective, id int) error
+```
+
+
+
+<a name="Controller.UpdateSession"></a>
+### func \(\*Controller\) [UpdateSession](<https://github.com/kilianp07/MuscleApp/blob/main/database/controller/session.go#L20>)
+
+```go
+func (c *Controller) UpdateSession(session *sessionModel.Session) error
 ```
 
 
@@ -560,6 +610,88 @@ func (handler *ObjectiveHandler) UpdateObjective(c *gin.Context)
 
 
 
+# sessionHandler
+
+```go
+import "github.com/kilianp07/MuscleApp/handlers/session"
+```
+
+## Index
+
+- [type SessionHandler](<#SessionHandler>)
+  - [func NewSessionHandler\(db \*gorm.DB\) \*SessionHandler](<#NewSessionHandler>)
+  - [func \(handler \*SessionHandler\) CreateSession\(c \*gin.Context\)](<#SessionHandler.CreateSession>)
+  - [func \(handler \*SessionHandler\) DeleteSession\(c \*gin.Context\)](<#SessionHandler.DeleteSession>)
+  - [func \(handler \*SessionHandler\) GetAllSessions\(c \*gin.Context\)](<#SessionHandler.GetAllSessions>)
+  - [func \(handler \*SessionHandler\) GetSessionByID\(c \*gin.Context\)](<#SessionHandler.GetSessionByID>)
+  - [func \(handler \*SessionHandler\) UpdateSession\(c \*gin.Context\)](<#SessionHandler.UpdateSession>)
+
+
+<a name="SessionHandler"></a>
+## type [SessionHandler](<https://github.com/kilianp07/MuscleApp/blob/main/handlers/session/session.go#L14-L17>)
+
+
+
+```go
+type SessionHandler struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewSessionHandler"></a>
+### func [NewSessionHandler](<https://github.com/kilianp07/MuscleApp/blob/main/handlers/session/session.go#L19>)
+
+```go
+func NewSessionHandler(db *gorm.DB) *SessionHandler
+```
+
+
+
+<a name="SessionHandler.CreateSession"></a>
+### func \(\*SessionHandler\) [CreateSession](<https://github.com/kilianp07/MuscleApp/blob/main/handlers/session/session.go#L26>)
+
+```go
+func (handler *SessionHandler) CreateSession(c *gin.Context)
+```
+
+
+
+<a name="SessionHandler.DeleteSession"></a>
+### func \(\*SessionHandler\) [DeleteSession](<https://github.com/kilianp07/MuscleApp/blob/main/handlers/session/session.go#L121>)
+
+```go
+func (handler *SessionHandler) DeleteSession(c *gin.Context)
+```
+
+
+
+<a name="SessionHandler.GetAllSessions"></a>
+### func \(\*SessionHandler\) [GetAllSessions](<https://github.com/kilianp07/MuscleApp/blob/main/handlers/session/session.go#L149>)
+
+```go
+func (handler *SessionHandler) GetAllSessions(c *gin.Context)
+```
+
+
+
+<a name="SessionHandler.GetSessionByID"></a>
+### func \(\*SessionHandler\) [GetSessionByID](<https://github.com/kilianp07/MuscleApp/blob/main/handlers/session/session.go#L55>)
+
+```go
+func (handler *SessionHandler) GetSessionByID(c *gin.Context)
+```
+
+
+
+<a name="SessionHandler.UpdateSession"></a>
+### func \(\*SessionHandler\) [UpdateSession](<https://github.com/kilianp07/MuscleApp/blob/main/handlers/session/session.go#L84>)
+
+```go
+func (handler *SessionHandler) UpdateSession(c *gin.Context)
+```
+
+
+
 # userHandler
 
 ```go
@@ -744,7 +876,7 @@ import "github.com/kilianp07/MuscleApp/models/Exercise"
 
 - [type Create](<#Create>)
 - [type Exercise](<#Exercise>)
-  - [func CreateToModel\(create \*Create\) \*Exercise](<#CreateToModel>)
+  - [func CreateToModel\(create \*Create\) Exercise](<#CreateToModel>)
   - [func PublicToModel\(public \*Public, exerciseId uint\) \*Exercise](<#PublicToModel>)
 - [type Public](<#Public>)
   - [func ModelToPublic\(exercise \*Exercise\) \*Public](<#ModelToPublic>)
@@ -788,7 +920,7 @@ type Exercise struct {
 ### func [CreateToModel](<https://github.com/kilianp07/MuscleApp/blob/main/models/Exercise/exercise.go#L47>)
 
 ```go
-func CreateToModel(create *Create) *Exercise
+func CreateToModel(create *Create) Exercise
 ```
 
 
@@ -888,6 +1020,185 @@ type Public struct {
 
 ```go
 func ModelToPublic(objective *Objective) *Public
+```
+
+
+
+# sessionModel
+
+```go
+import "github.com/kilianp07/MuscleApp/models/session"
+```
+
+## Index
+
+- [type Create](<#Create>)
+- [type Public](<#Public>)
+  - [func ModelToPublic\(session \*Session\) Public](<#ModelToPublic>)
+- [type Session](<#Session>)
+  - [func CreateToModel\(session Create, userId uint\) Session](<#CreateToModel>)
+  - [func PublicToModel\(session Public\) Session](<#PublicToModel>)
+
+
+<a name="Create"></a>
+## type [Create](<https://github.com/kilianp07/MuscleApp/blob/main/models/session/session.go#L24-L28>)
+
+
+
+```go
+type Create struct {
+    Exercises   []sessionexerciseModel.Create `json:"exercises" binding:"required"`
+    Title       string                        `json:"title" binding:"required"`
+    Description string                        `json:"description" binding:"required"`
+}
+```
+
+<a name="Public"></a>
+## type [Public](<https://github.com/kilianp07/MuscleApp/blob/main/models/session/session.go#L17-L22>)
+
+
+
+```go
+type Public struct {
+    ID          uint                          `json:"id"`
+    Exercises   []sessionexerciseModel.Public `json:"exercises"`
+    Title       string                        `json:"title"`
+    Description string                        `json:"description"`
+}
+```
+
+<a name="ModelToPublic"></a>
+### func [ModelToPublic](<https://github.com/kilianp07/MuscleApp/blob/main/models/session/session.go#L30>)
+
+```go
+func ModelToPublic(session *Session) Public
+```
+
+
+
+<a name="Session"></a>
+## type [Session](<https://github.com/kilianp07/MuscleApp/blob/main/models/session/session.go#L8-L15>)
+
+
+
+```go
+type Session struct {
+    gorm.Model
+    ID          uint                                   `json:"id" gorm:"primary_key"`
+    UserID      uint                                   `json:"user_id"`
+    Exercises   []sessionexerciseModel.SessionExercise `json:"exercises"`
+    Title       string                                 `json:"title"`
+    Description string                                 `json:"description"`
+}
+```
+
+<a name="CreateToModel"></a>
+### func [CreateToModel](<https://github.com/kilianp07/MuscleApp/blob/main/models/session/session.go#L45>)
+
+```go
+func CreateToModel(session Create, userId uint) Session
+```
+
+
+
+<a name="PublicToModel"></a>
+### func [PublicToModel](<https://github.com/kilianp07/MuscleApp/blob/main/models/session/session.go#L58>)
+
+```go
+func PublicToModel(session Public) Session
+```
+
+
+
+# sessionexerciseModel
+
+```go
+import "github.com/kilianp07/MuscleApp/models/sessionExercise"
+```
+
+## Index
+
+- [type Create](<#Create>)
+- [type Public](<#Public>)
+  - [func ModelToPublic\(session SessionExercise\) Public](<#ModelToPublic>)
+- [type SessionExercise](<#SessionExercise>)
+  - [func CreateToModel\(session Create\) SessionExercise](<#CreateToModel>)
+  - [func PublicToModel\(session Public\) SessionExercise](<#PublicToModel>)
+
+
+<a name="Create"></a>
+## type [Create](<https://github.com/kilianp07/MuscleApp/blob/main/models/sessionExercise/sessionExercise.go#L23-L30>)
+
+
+
+```go
+type Create struct {
+    SessionID  uint    `json:"session_id" binding:"required"`
+    Name       string  `json:"name" binding:"required"`
+    Serie      uint    `json:"serie" binding:"required"`
+    Repetition uint    `json:"repetition" binding:"required"`
+    RestTime   float32 `json:"rest_time" binding:"required"`
+    Method     string  `json:"method" binding:"required"`
+}
+```
+
+<a name="Public"></a>
+## type [Public](<https://github.com/kilianp07/MuscleApp/blob/main/models/sessionExercise/sessionExercise.go#L15-L22>)
+
+
+
+```go
+type Public struct {
+    ID         uint    `json:"id"`
+    Name       string  `json:"name"`
+    Serie      uint    `json:"serie"`
+    Repetition uint    `json:"repetition"`
+    RestTime   float32 `json:"rest_time"`
+    Method     string  `json:"method"`
+}
+```
+
+<a name="ModelToPublic"></a>
+### func [ModelToPublic](<https://github.com/kilianp07/MuscleApp/blob/main/models/sessionExercise/sessionExercise.go#L32>)
+
+```go
+func ModelToPublic(session SessionExercise) Public
+```
+
+
+
+<a name="SessionExercise"></a>
+## type [SessionExercise](<https://github.com/kilianp07/MuscleApp/blob/main/models/sessionExercise/sessionExercise.go#L5-L14>)
+
+
+
+```go
+type SessionExercise struct {
+    gorm.Model
+    ID         uint    `json:"id" gorm:"primary_key"`
+    SessionID  uint    `json:"session_id" gorm:"type:bigint unsigned"`
+    Name       string  `json:"name"`
+    Serie      uint    `json:"serie"`
+    Repetition uint    `json:"repetition"`
+    RestTime   float32 `json:"rest_time"`
+    Method     string  `json:"method"`
+}
+```
+
+<a name="CreateToModel"></a>
+### func [CreateToModel](<https://github.com/kilianp07/MuscleApp/blob/main/models/sessionExercise/sessionExercise.go#L42>)
+
+```go
+func CreateToModel(session Create) SessionExercise
+```
+
+
+
+<a name="PublicToModel"></a>
+### func [PublicToModel](<https://github.com/kilianp07/MuscleApp/blob/main/models/sessionExercise/sessionExercise.go#L53>)
+
+```go
+func PublicToModel(session Public) SessionExercise
 ```
 
 
